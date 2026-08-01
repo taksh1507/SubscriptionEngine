@@ -82,7 +82,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES=30
 > To use MySQL in production, update the `DATABASE_URL` format to: `mysql+pymysql://<user>:<password>@<host>:<port>/<db_name>`
 
 #### 3. Run Database Migrations
-Initialize the database schema using Alembic:
+Since the database file is not tracked in version control, you must initialize it locally. Running Alembic migrations will automatically create the SQLite database file (`subscription_db.db`) and set up all the required tables:
 ```bash
 python -m alembic upgrade head
 ```
