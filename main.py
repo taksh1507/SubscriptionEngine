@@ -21,6 +21,16 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("Starting background tasks...")
+    # For local/SQLite databases create missing tables automatically so the
+    # service is usable right after `uvicorn main:app`. Alembic remains the
+    # source of truth for migrations and production databases are untouched
+    # because non-SQLite URLs skip this step.
+    if settings.DATABASE_URL.startswith("sqlite"):
+        from app.db.session import engine
+        from app.models.subscription import Base
+
+        Base.metadata.create_all(bind=engine)
+        logger.info("SQLite database: ensured tables exist")
     start_scheduler()
     yield
     logger.info("Shutting down background tasks...")

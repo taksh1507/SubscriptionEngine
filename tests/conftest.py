@@ -1,3 +1,14 @@
+import os
+
+# The app requires mandatory settings at import time (app.core.config.Settings).
+# Provide safe test-only values before main is imported so `pytest` works with
+# zero manual configuration. Real credentials are never used here; CI and
+# local runs both inherit these defaults while .env can still override them.
+os.environ.setdefault("DATABASE_URL", "sqlite:///./test_local.db")
+os.environ.setdefault("JWT_SECRET_KEY", "test-secret-not-a-real-key")
+os.environ.setdefault("JWT_ALGORITHM", "HS256")
+os.environ.setdefault("ACCESS_TOKEN_EXPIRE_MINUTES", "30")
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
